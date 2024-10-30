@@ -1,17 +1,22 @@
+import { Link } from "expo-router";
 import { Text, View } from "react-native";
 
 export default function Index() {
   return (
     <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
+      className="flex-1 items-center justify-center bg-[#232323]"
     >
-      <Text>
+      <Text
+        className="text-[#fff]"
+      >
         Welcome To Aora!
       </Text>
-    </View>
+      <Link
+        href={"/profile"}
+        className="text-blue-400"
+      >
+        Go to Profile
+      </Link>
+    </View >
   );
 }
