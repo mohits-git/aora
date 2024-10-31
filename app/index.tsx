@@ -4,12 +4,12 @@ import { Text, View } from "react-native";
 export default function Index() {
   return (
     <View
-      className="flex-1 items-center justify-center bg-[#232323]"
+      className="flex-1 items-center justify-center"
     >
       <Text
-        className="text-[#fff]"
+        className="text-3xl font-pblack"
       >
-        Welcome To Aora!
+        Aora!
       </Text>
       <Link
         href={"/profile"}
