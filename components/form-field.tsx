@@ -32,7 +32,7 @@ const FormField = ({
       <Text className="text-base text-gray-100 font-pmedium">{title}</Text>
       <View className="relative">
         <TextInput
-          className={`flex-1 text-white font-psemibold text-base border-2 w-full h-16 px-4 bg-black-100 rounded-2xl focus:border-secondary items-center flex-row ${title === "Password" ? "pr-16" : ""}`}
+          className={`flex-1 text-white font-psemibold text-base border-2 w-full min- h-16 px-4 bg-black-100 rounded-2xl focus:border-secondary items-center flex-row ${title === "Password" ? "pr-16" : ""}`}
           value={value}
           placeholder={placeholder}
           placeholderTextColor={"#7b7b8b"}
