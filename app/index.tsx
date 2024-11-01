@@ -1,4 +1,5 @@
-import { Image, ScrollView, StatusBar, Text, View } from "react-native";
+import { Image, ScrollView, Text, View } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { images } from "@/constants";
@@ -53,7 +54,7 @@ export default function Index() {
         </View>
       </ScrollView>
 
-      <StatusBar backgroundColor={"#161622"} barStyle={"light-content"} />
+      <StatusBar backgroundColor={"#161622"} style="light" />
     </SafeAreaView>
   );
 }
