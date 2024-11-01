@@ -5,7 +5,7 @@ const Create = () => {
     <View>
       <Text>Create Page</Text>
     </View>
-  )
-}
+  );
+};
 
 export default Create;

@@ -5,7 +5,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#161622',
+        primary: "#161622",
         secondary: {
           DEFAULT: "#FF9C01",
           100: "#FF9001",
@@ -19,19 +19,19 @@ module.exports = {
         gray: {
           100: "#CDCDE0",
         },
-      }
+      },
     },
     fontFamily: {
-        pthin: ["Poppins-Thin", "sans-serif"],
-        pextralight: ["Poppins-ExtraLight", "sans-serif"],
-        plight: ["Poppins-Light", "sans-serif"],
-        pregular: ["Poppins-Regular", "sans-serif"],
-        pmedium: ["Poppins-Medium", "sans-serif"],
-        psemibold: ["Poppins-SemiBold", "sans-serif"],
-        pbold: ["Poppins-Bold", "sans-serif"],
-        pextrabold: ["Poppins-ExtraBold", "sans-serif"],
-        pblack: ["Poppins-Black", "sans-serif"],
-      },
+      pthin: ["Poppins-Thin", "sans-serif"],
+      pextralight: ["Poppins-ExtraLight", "sans-serif"],
+      plight: ["Poppins-Light", "sans-serif"],
+      pregular: ["Poppins-Regular", "sans-serif"],
+      pmedium: ["Poppins-Medium", "sans-serif"],
+      psemibold: ["Poppins-SemiBold", "sans-serif"],
+      pbold: ["Poppins-Bold", "sans-serif"],
+      pextrabold: ["Poppins-ExtraBold", "sans-serif"],
+      pblack: ["Poppins-Black", "sans-serif"],
+    },
   },
   plugins: [],
-}
+};

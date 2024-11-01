@@ -6,6 +6,6 @@ const AuthLayout = () => {
       <Text>Auth Layout</Text>
     </View>
   );
-}
+};
 
 export default AuthLayout;
