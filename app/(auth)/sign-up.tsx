@@ -1,10 +1,11 @@
-import { Image, ScrollView, Text, View } from "react-native";
+import { Image, ScrollView, Text, View, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "@/constants";
 import FormField from "@/components/form-field";
 import { useState } from "react";
 import CustomButton from "@/components/custom-button";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
+import { createUser } from "@/lib/appwrite";
 
 const SignUp = () => {
   const [form, setForm] = useState({
@@ -14,8 +15,29 @@ const SignUp = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function onSubmit() {
+  async function onSubmit() {
+    if (!form.email || !form.password || !form.username) {
+      Alert.alert("Error", "Please fill all the fields");
+      return;
+    }
+    try {
+      setIsSubmitting(true);
+      const results = await createUser(
+        form.email,
+        form.password,
+        form.username,
+      );
 
+      if (!results) throw Error("Could not create user. Please try again.");
+
+      // TODO: set the results to the global state
+
+      router.replace("/home")
+    } catch (error: any) {
+      Alert.alert("Error", error.message ?? "Something went wrong");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -23,11 +45,11 @@ const SignUp = () => {
       <ScrollView>
         <View className="w-full justify-center min-h-[80vh] h-full my-6 px-4">
           <View className="w-full flex-row items-center justify-center">
-          <Image
-            source={images.logo}
-            resizeMode="contain"
-            className="w-[115px] h-[35px]"
-          />
+            <Image
+              source={images.logo}
+              resizeMode="contain"
+              className="w-[115px] h-[35px]"
+            />
           </View>
           <Text className="text-2xl text-white font-semibold font-psemibold mt-10 text-center">
             SignUp to Aora
@@ -60,14 +82,17 @@ const SignUp = () => {
             isLoading={isSubmitting}
           />
 
-        <View className="justify-center pt-5 flex-row gap-2">
-          <Text className="text-lg text-gray-100 font-pregular">
-            Already have an account? {" "}
-            <Link href={"/sign-in"} className="text-secondary font-psemibold text-lg">
-              Sign In
-            </Link>
-          </Text>
-        </View>
+          <View className="justify-center pt-5 flex-row gap-2">
+            <Text className="text-lg text-gray-100 font-pregular">
+              Already have an account?{" "}
+              <Link
+                href={"/sign-in"}
+                className="text-secondary font-psemibold text-lg"
+              >
+                Sign In
+              </Link>
+            </Text>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
