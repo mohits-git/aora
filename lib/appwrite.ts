@@ -1,5 +1,11 @@
-import SignIn from "@/app/(auth)/sign-in";
-import { Account, Avatars, Client, Databases, ID } from "react-native-appwrite";
+import {
+  Account,
+  Avatars,
+  Client,
+  Databases,
+  ID,
+  Query,
+} from "react-native-appwrite";
 
 export const config = {
   endpoint: "https://cloud.appwrite.io/v1",
@@ -45,10 +51,10 @@ export async function createUser(
       ID.unique(),
       {
         accountId: newAccount.$id,
-        email, 
+        email,
         username,
-        avatar: avatarUrl
-      }
+        avatar: avatarUrl,
+      },
     );
     return newUser;
   } catch (error) {
@@ -67,5 +73,27 @@ export async function signIn(email: string, password: string) {
   } catch (error) {
     console.error(error);
     throw error;
+  }
+}
+
+export async function getCurrentUser() {
+  try {
+    const currentAccount = await account.get();
+    if (!currentAccount) {
+      throw Error;
+    }
+
+    const currentUser = await databases.listDocuments(
+      config.databaseId,
+      config.usersCollectionId,
+      [Query.equal("accountId", currentAccount.$id)],
+    );
+
+    if(!currentUser) {
+      throw Error;
+    }
+    return currentUser.documents[0];
+  } catch (error) {
+    console.log(error);
   }
 }
