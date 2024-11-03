@@ -97,3 +97,11 @@ export async function getCurrentUser() {
     console.log(error);
   }
 }
+
+export async function getAllPosts() {
+  try {
+    console.log("Getting all posts");
+  } catch (error) {
+      console.error(error);
+  }
+}
