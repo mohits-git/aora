@@ -5,23 +5,29 @@ import { SearchInput } from "@/components/search-input";
 import { Trending } from "@/components/trending";
 import { EmptyState } from "@/components/empty-state";
 import { useState } from "react";
+import useAppWrite from "@/lib/useAppWrite";
+import { getAllPosts, getLatestPosts } from "@/lib/appwrite";
+import { VideoCard } from "@/components/video-card";
 
 const Home = () => {
+  const { data: posts, refetch } = useAppWrite(getAllPosts);
+  const { data: latestPosts} = useAppWrite(getLatestPosts);
+  
+
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await refetch();
     setRefreshing(false);
   };
+
   return (
     <SafeAreaView className="bg-primary h-full">
       <FlatList
-        data={[{ id: "1" }, { id: "2" }, { id: "3" }]}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <Text className="text-3xl text-white">{item.id}</Text>
-        )}
+        data={posts}
+        keyExtractor={(item) => item.$id}
+        renderItem={({ item }) => <VideoCard video={item as any} />}
         ListHeaderComponent={() => (
           <View className="my-6 px-4 space-y-4">
             <View className="justify-between items-start flex-row mb-9">
@@ -48,7 +54,7 @@ const Home = () => {
                 Latest Videos
               </Text>
 
-              <Trending posts={[{ id: "1" }, { id: "2" }, { id: "3" }] ?? []} />
+              <Trending posts={latestPosts as any ?? []} />
             </View>
           </View>
         )}
