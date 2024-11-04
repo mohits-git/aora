@@ -89,7 +89,7 @@ export async function getCurrentUser() {
       [Query.equal("accountId", currentAccount.$id)],
     );
 
-    if(!currentUser) {
+    if (!currentUser) {
       throw Error;
     }
     return currentUser.documents[0];
@@ -100,8 +100,33 @@ export async function getCurrentUser() {
 
 export async function getAllPosts() {
   try {
-    console.log("Getting all posts");
+    const posts = await databases.listDocuments(
+      config.databaseId,
+      config.videosCollectionId,
+    );
+    if (!posts || !posts.documents) {
+      throw Error("No posts found");
+    }
+    return posts.documents;
   } catch (error) {
-      console.error(error);
+    console.error(error);
+    return [];
+  }
+}
+
+export async function getLatestPosts() {
+  try {
+    const posts = await databases.listDocuments(
+      config.databaseId,
+      config.videosCollectionId,
+      [Query.orderDesc("$createdAt"), Query.limit(7)],
+    );
+    if (!posts || !posts.documents) {
+      throw Error("No posts found");
+    }
+    return posts.documents;
+  } catch (error) {
+    console.error(error);
+    return [];
   }
 }
