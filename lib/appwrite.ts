@@ -130,3 +130,20 @@ export async function getLatestPosts() {
     return [];
   }
 }
+
+export async function searchPosts(query: string) {
+  try {
+    const posts = await databases.listDocuments(
+      config.databaseId,
+      config.videosCollectionId,
+      [Query.search("title", query)],
+    );
+    if (!posts || !posts.documents) {
+      throw Error("No posts found");
+    }
+    return posts.documents;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
