@@ -1,6 +1,6 @@
 import { icons } from "@/constants";
 import React, { useState } from "react";
-import { Video, ResizeMode } from "expo-av";
+import { Video, ResizeMode, AVPlaybackStatusSuccess } from "expo-av";
 import {
   FlatList,
   Image,
@@ -56,13 +56,21 @@ const TrendingPost = ({ activePost, post }: TrendingPostProps) => {
       className="mr-5"
     >
       {play ? (
-          // TODO: Fix the bug?
         <Video
           source={{ uri: post.video }}
-          className="w-52 h-72 rounded-[35px] bg-white/10"
-          resizeMode={ResizeMode.CONTAIN}
+          style={{
+            width: 208,
+            height: 288,
+            borderRadius: 35,
+            backgroundColor: "rgba(255,255,255,0.1)",
+          }}
+          resizeMode={ResizeMode.COVER}
           useNativeControls
           shouldPlay
+          onPlaybackStatusUpdate={(status) => {
+            // @ts-ignore
+            if (status.didJustFinish) setPlay(false);
+          }}
         />
       ) : (
         <TouchableOpacity
@@ -72,7 +80,7 @@ const TrendingPost = ({ activePost, post }: TrendingPostProps) => {
         >
           <ImageBackground
             source={{ uri: post.thumbnail }}
-            className="w-52 h-72 rounded-[35px] overflow-hidden shadow-lg shadow-black/40"
+            className="w-[208px] h-[288px] rounded-[35px] overflow-hidden shadow-lg shadow-black/40"
             resizeMode="cover"
           />
           <Image
@@ -115,7 +123,7 @@ export function Trending({ posts }: TrendingProps) {
       viewabilityConfig={{
         itemVisiblePercentThreshold: 70,
       }}
-      contentOffset={{ x: 110, y: 0 }}
+      contentOffset={{ x: 170, y: 0 }}
     />
   );
 }
