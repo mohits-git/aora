@@ -5,7 +5,8 @@ import FormField from "@/components/form-field";
 import { useState } from "react";
 import CustomButton from "@/components/custom-button";
 import { Link, router } from "expo-router";
-import { signIn } from "@/lib/appwrite";
+import { getCurrentUser, signIn } from "@/lib/appwrite";
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 const SignIn = () => {
   const [form, setForm] = useState({
@@ -13,6 +14,7 @@ const SignIn = () => {
     password: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { setUser, setIsLoggedIn } = useGlobalContext();
 
   async function onSubmit() {
     if (!form.email || !form.password) {
@@ -21,14 +23,16 @@ const SignIn = () => {
     }
     try {
       setIsSubmitting(true);
-      const results = await signIn(
+      await signIn(
         form.email,
         form.password,
       );
 
+      const results = await getCurrentUser();
       if (!results) throw Error("Sign in failed. Please try again.");
 
-      // TODO: set the results to the global state
+      setUser(results);
+      setIsLoggedIn(true);
 
       router.replace("/home")
     } catch (error: any) {

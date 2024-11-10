@@ -6,6 +6,7 @@ import { useState } from "react";
 import CustomButton from "@/components/custom-button";
 import { Link, router } from "expo-router";
 import { createUser } from "@/lib/appwrite";
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 const SignUp = () => {
   const [form, setForm] = useState({
@@ -14,6 +15,7 @@ const SignUp = () => {
     password: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { setUser, setIsLoggedIn } = useGlobalContext();
 
   async function onSubmit() {
     if (!form.email || !form.password || !form.username) {
@@ -30,7 +32,8 @@ const SignUp = () => {
 
       if (!results) throw Error("Could not create user. Please try again.");
 
-      // TODO: set the results to the global state
+      setUser(results);
+      setIsLoggedIn(true);
 
       router.replace("/home")
     } catch (error: any) {

@@ -8,8 +8,10 @@ import { useState } from "react";
 import useAppWrite from "@/lib/useAppWrite";
 import { getAllPosts, getLatestPosts } from "@/lib/appwrite";
 import { VideoCard } from "@/components/video-card";
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 const Home = () => {
+  const { user } = useGlobalContext();
   const { data: posts, refetch } = useAppWrite(getAllPosts);
   const { data: latestPosts } = useAppWrite(getLatestPosts);
 
@@ -34,7 +36,7 @@ const Home = () => {
                 <Text className="font-pmedium text-sm text-gray-100">
                   Welcome back
                 </Text>
-                <Text className="font-pmedium text-2xl text-white">User</Text>
+                <Text className="font-pmedium text-2xl text-white">{user?.username}</Text>
               </View>
 
               <View className="mt-1.5">
