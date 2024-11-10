@@ -259,3 +259,24 @@ export const createVideo = async (form: {
     throw error;
   }
 };
+
+export const getLikedVideos = async (userId?: string) => {
+  if(!userId) return [];
+  try {
+    const posts = await databases.listDocuments(
+      config.databaseId,
+      config.videosCollectionId,
+      [Query.orderDesc("$createdAt")]
+    );
+    if (!posts || !posts.documents) {
+      throw Error("No posts found");
+    }
+    const likedVideos = posts.documents.filter((post) =>
+      post.likes.some((like: any) => like.$id === userId)
+    );
+    return likedVideos;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}

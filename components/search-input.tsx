@@ -21,7 +21,7 @@ export function SearchInput({ initialQuery, ...props }: SearchInputProps) {
   return (
     <View className="relative">
       <TextInput
-        className={`flex-1 text-white font-pregular text-base focus:border-2 w-full min- h-16 px-4 bg-black-100 rounded-2xl focus:border-secondary items-center flex-row`}
+        className={`text-white font-pregular text-base focus:border-2 w-full min- h-16 px-4 bg-black-100 rounded-2xl focus:border-secondary items-center flex-row`}
         value={query}
         placeholder={"Search for a video topic"}
         placeholderTextColor={"#CDCDE0"}

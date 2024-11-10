@@ -13,7 +13,8 @@ import { useGlobalContext } from "@/context/GlobalProvider";
 const Home = () => {
   const { user } = useGlobalContext();
   const { data: posts, refetch } = useAppWrite(getAllPosts);
-  const { data: latestPosts, refetch: refetchLatestPost } = useAppWrite(getLatestPosts);
+  const { data: latestPosts, refetch: refetchLatestPost } =
+    useAppWrite(getLatestPosts);
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -29,7 +30,9 @@ const Home = () => {
       <FlatList
         data={posts}
         keyExtractor={(item) => item.$id}
-        renderItem={({ item }) => <VideoCard video={item as any} />}
+        renderItem={({ item }) => (
+          <VideoCard userId={user?.$id} video={item as any} />
+        )}
         ListHeaderComponent={() => (
           <View className="my-6 px-4 space-y-4">
             <View className="justify-between items-start flex-row mb-9">
@@ -37,7 +40,9 @@ const Home = () => {
                 <Text className="font-pmedium text-sm text-gray-100">
                   Welcome back
                 </Text>
-                <Text className="font-pmedium text-2xl text-white">{user?.username}</Text>
+                <Text className="font-pmedium text-2xl text-white">
+                  {user?.username}
+                </Text>
               </View>
 
               <View className="mt-1.5">

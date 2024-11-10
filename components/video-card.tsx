@@ -1,26 +1,44 @@
 import { icons } from "@/constants";
+//import { updateLike } from "@/lib/appwrite";
 import { ResizeMode, Video } from "expo-av";
 import { useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 
 interface VideoCardProps {
+  userId?: string;
   video: {
+    $id: string;
     title: string;
     thumbnail: string;
     video: string;
     creator: { username: string; avatar: string };
+    likes: { $id: string }[];
   };
 }
 
 export function VideoCard({
+  userId,
   video: {
+    $id,
     title,
     thumbnail,
     video,
     creator: { username, avatar },
+    likes,
   },
 }: VideoCardProps) {
   const [play, setPlay] = useState(false);
+  const [liked, setLiked] = useState(likes.some((like) => like.$id === userId));
+  console.log(userId);
+  console.log(likes);
+
+  const handleLike = async () => {
+    // update like in db
+
+    //await updateLike($id, userId!)
+
+    setLiked((prev) => !prev);
+  };
 
   return (
     <View className="flex-col items-center px-4 mb-14">
@@ -50,11 +68,21 @@ export function VideoCard({
           </View>
 
           <View className="pt-2">
-            <Image
-              source={icons.menu}
-              className="w-5 h-5"
-              resizeMode="contain"
-            />
+            <TouchableOpacity onPress={handleLike}>
+              {!liked ? (
+                <Image
+                  source={icons.heartHollow}
+                  className="w-5 h-5"
+                  resizeMode="contain"
+                />
+              ) : (
+                <Image
+                  source={icons.heartFilled}
+                  className="w-5 h-5"
+                  resizeMode="contain"
+                />
+              )}
+            </TouchableOpacity>
           </View>
         </View>
       </View>
