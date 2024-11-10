@@ -147,3 +147,29 @@ export async function searchPosts(query: string) {
     return [];
   }
 }
+
+export async function getUserPosts(userId: string) {
+  try {
+    const posts = await databases.listDocuments(
+      config.databaseId,
+      config.videosCollectionId,
+      [Query.equal("creator", userId)],
+    );
+    if (!posts || !posts.documents) {
+      throw Error("No posts found");
+    }
+    return posts.documents;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+
+export const signOut = async () => {
+  try {
+    const session = await account.deleteSession("current");
+    return session;
+  } catch (error) {
+    console.error(error);
+  }
+};
