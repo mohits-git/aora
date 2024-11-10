@@ -28,11 +28,11 @@ const FormField = ({
 }: FormFieldProps) => {
   const [showPassword, setShowPassword] = useState(false);
   return (
-    <View className={`space-y-2 ${className}`}>
+    <View className={`gap-y-2 ${className}`}>
       <Text className="text-base text-gray-100 font-pmedium">{title}</Text>
       <View className="relative">
         <TextInput
-          className={`flex-1 text-white font-psemibold text-base border-2 w-full min- h-16 px-4 bg-black-100 rounded-2xl focus:border-secondary items-center flex-row ${title === "Password" ? "pr-16" : ""}`}
+          className={`text-white font-psemibold text-base border-2 w-full min-h-16 px-4 bg-black-100 rounded-2xl focus:border-secondary items-center flex-row ${title === "Password" ? "pr-16" : ""}`}
           value={value}
           placeholder={placeholder}
           placeholderTextColor={"#7b7b8b"}
@@ -42,9 +42,10 @@ const FormField = ({
           {...props}
         />
         {title === "Password" && (
-          <TouchableOpacity 
-              onPress={() => setShowPassword(!showPassword)} 
-              className="absolute right-4 top-1/2 -translate-y-3">
+          <TouchableOpacity
+            onPress={() => setShowPassword(!showPassword)}
+            className="absolute right-4 top-1/2 -translate-y-3"
+          >
             <Image
               source={!showPassword ? icons.eye : icons.eyeHide}
               className="w-6 h-6"
