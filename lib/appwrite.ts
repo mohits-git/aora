@@ -4,7 +4,9 @@ import {
   Client,
   Databases,
   ID,
+  ImageGravity,
   Query,
+  Storage,
 } from "react-native-appwrite";
 
 export const config = {
@@ -25,6 +27,7 @@ client
 const account = new Account(client);
 const avatars = new Avatars(client);
 const databases = new Databases(client);
+const storage = new Storage(client);
 
 export async function createUser(
   email: string,
@@ -171,5 +174,84 @@ export const signOut = async () => {
     return session;
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const getFilePreview = async (
+  fileId: string,
+  type: "video" | "image",
+) => {
+  let fileUrl;
+  try {
+    if (type === "video") {
+      fileUrl = storage.getFileView(config.storageId, fileId);
+    } else if (type === "image") {
+      fileUrl = storage.getFilePreview(
+        config.storageId,
+        fileId,
+        2000,
+        2000,
+        ImageGravity.Top,
+        100,
+      );
+    } else {
+      throw new Error("Invalid file type");
+    }
+    if (!fileUrl) throw Error("No file found");
+    return fileUrl;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const uploadFile = async (file: any, type: "video" | "image") => {
+  if (!file) return;
+  const { mimeType, ...rest } = file;
+  const asset = { type: mimeType, ...rest };
+  try {
+    const uploadedFile = await storage.createFile(
+      config.storageId,
+      ID.unique(),
+      asset,
+    );
+
+    if(!uploadedFile) throw Error("Failed to upload file");
+    const fileUrl = await getFilePreview(uploadedFile.$id, type);
+    return fileUrl;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const createVideo = async (form: {
+  userId: string;
+  title: string;
+  thumbnail: any;
+  video: any;
+  prompt: string;
+}) => {
+  try {
+    const [thumbnailUrl, videoUrl] = await Promise.all([
+      uploadFile(form.thumbnail, "image"),
+      uploadFile(form.video, "video"),
+    ]);
+    const newPost = await databases.createDocument(
+      config.databaseId,
+      config.videosCollectionId,
+      ID.unique(),
+      {
+        title: form.title,
+        thumbnail: thumbnailUrl,
+        video: videoUrl,
+        prompt: form.prompt,
+        creator: form.userId,
+      },
+    );
+    if(!newPost) throw Error("Failed to create post");
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 };
