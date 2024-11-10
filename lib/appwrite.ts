@@ -106,6 +106,7 @@ export async function getAllPosts() {
     const posts = await databases.listDocuments(
       config.databaseId,
       config.videosCollectionId,
+      [Query.orderDesc("$createdAt")]
     );
     if (!posts || !posts.documents) {
       throw Error("No posts found");
@@ -207,15 +208,18 @@ export const getFilePreview = async (
 
 export const uploadFile = async (file: any, type: "video" | "image") => {
   if (!file) return;
-  const { mimeType, ...rest } = file;
-  const asset = { type: mimeType, ...rest };
+  const asset = {
+    name: file.fileName,
+    size: file.fileSize,
+    uri: file.uri,
+    type: file.mimeType,
+  };
   try {
     const uploadedFile = await storage.createFile(
       config.storageId,
       ID.unique(),
       asset,
     );
-
     if(!uploadedFile) throw Error("Failed to upload file");
     const fileUrl = await getFilePreview(uploadedFile.$id, type);
     return fileUrl;
