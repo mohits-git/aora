@@ -35,7 +35,7 @@ const Bookmark = () => {
                 {user?.username}{"'s"}
               </Text>
               <Text className="font-pmedium text-2xl text-white">
-                Liked Vides
+                Bookmarked Videos
               </Text>
             </View>
 

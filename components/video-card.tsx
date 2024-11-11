@@ -1,8 +1,8 @@
 import { icons } from "@/constants";
-//import { updateLike } from "@/lib/appwrite";
+import { updateLike } from "@/lib/appwrite";
 import { ResizeMode, Video } from "expo-av";
 import { useState } from "react";
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity, Alert } from "react-native";
 
 interface VideoCardProps {
   userId?: string;
@@ -29,15 +29,20 @@ export function VideoCard({
 }: VideoCardProps) {
   const [play, setPlay] = useState(false);
   const [liked, setLiked] = useState(likes.some((like) => like.$id === userId));
-  console.log(userId);
-  console.log(likes);
+  const [loading, setLoading] = useState(false);
 
   const handleLike = async () => {
-    // update like in db
-
-    //await updateLike($id, userId!)
-
+    setLoading(true);
     setLiked((prev) => !prev);
+    try {
+      await updateLike($id);
+    } catch (error: any) {
+      console.error(error);
+      setLiked((prev) => !prev);
+      Alert.alert("error", error?.message ?? "Failed to like video");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -68,20 +73,13 @@ export function VideoCard({
           </View>
 
           <View className="pt-2">
-            <TouchableOpacity onPress={handleLike}>
-              {!liked ? (
-                <Image
-                  source={icons.heartHollow}
-                  className="w-5 h-5"
-                  resizeMode="contain"
-                />
-              ) : (
-                <Image
-                  source={icons.heartFilled}
-                  className="w-5 h-5"
-                  resizeMode="contain"
-                />
-              )}
+            <TouchableOpacity onPress={handleLike} disabled={loading}>
+              <Image
+                source={icons.bookmark}
+                tintColor={liked ? "#FFA001" : "#CDCDE050"}
+                className="w-5 h-5"
+                resizeMode="contain"
+              />
             </TouchableOpacity>
           </View>
         </View>

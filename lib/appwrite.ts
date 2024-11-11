@@ -106,7 +106,7 @@ export async function getAllPosts() {
     const posts = await databases.listDocuments(
       config.databaseId,
       config.videosCollectionId,
-      [Query.orderDesc("$createdAt")]
+      [Query.orderDesc("$createdAt")],
     );
     if (!posts || !posts.documents) {
       throw Error("No posts found");
@@ -220,7 +220,7 @@ export const uploadFile = async (file: any, type: "video" | "image") => {
       ID.unique(),
       asset,
     );
-    if(!uploadedFile) throw Error("Failed to upload file");
+    if (!uploadedFile) throw Error("Failed to upload file");
     const fileUrl = await getFilePreview(uploadedFile.$id, type);
     return fileUrl;
   } catch (error) {
@@ -253,7 +253,7 @@ export const createVideo = async (form: {
         creator: form.userId,
       },
     );
-    if(!newPost) throw Error("Failed to create post");
+    if (!newPost) throw Error("Failed to create post");
   } catch (error) {
     console.error(error);
     throw error;
@@ -261,22 +261,52 @@ export const createVideo = async (form: {
 };
 
 export const getLikedVideos = async (userId?: string) => {
-  if(!userId) return [];
+  if (!userId) return [];
   try {
     const posts = await databases.listDocuments(
       config.databaseId,
       config.videosCollectionId,
-      [Query.orderDesc("$createdAt")]
+      [Query.orderDesc("$createdAt")],
     );
     if (!posts || !posts.documents) {
       throw Error("No posts found");
     }
     const likedVideos = posts.documents.filter((post) =>
-      post.likes.some((like: any) => like.$id === userId)
+      post.likes.some((like: any) => like.$id === userId),
     );
     return likedVideos;
   } catch (error) {
     console.error(error);
     return [];
   }
-}
+};
+
+export const updateLike = async (postId: string) => {
+  try {
+    const user = await getCurrentUser();
+    if (!user) throw Error("Login to like a video");
+    const post = await databases.getDocument(
+      config.databaseId,
+      config.videosCollectionId,
+      postId,
+    );
+    if (!post) throw Error("Post not found");
+    const liked = post.likes.some((like: any) => like.$id === user.$id);
+    if (liked) {
+      post.likes = post.likes.filter((like: any) => like.$id !== user.$id);
+    } else {
+      post.likes.push({ ...user });
+    }
+    await databases.updateDocument(
+      config.databaseId,
+      config.videosCollectionId,
+      postId,
+      {
+        likes: post.likes,
+      },
+    );
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
